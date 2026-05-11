@@ -4,6 +4,7 @@
 package patterns
 
 import (
+	"fmt"
 	"regexp"
 )
 
@@ -164,6 +165,63 @@ func All() []Pattern {
 func Match(command string) []Pattern {
 	var matches []Pattern
 	for _, p := range All() {
+		if p.Regex.MatchString(command) {
+			matches = append(matches, p)
+		}
+	}
+	return matches
+}
+
+// ─────── CUSTOM PATTERNS (user-defined via config) ───────
+
+// CustomPatternSpec is a user-supplied pattern definition from config.
+// Different from the internal Pattern struct so we can validate and
+// compile separately before merging into the matcher.
+type CustomPatternSpec struct {
+	Name        string
+	Regex       string
+	Severity    string // "warning" | "critical"
+	Description string
+	Category    string
+}
+
+// CompileCustom turns user-supplied specs into Pattern values.
+// Returns an error if any regex fails to compile (validation should
+// catch this earlier, but we double-check here).
+func CompileCustom(specs []CustomPatternSpec) ([]Pattern, error) {
+	out := make([]Pattern, 0, len(specs))
+	for _, s := range specs {
+		re, err := regexp.Compile(s.Regex)
+		if err != nil {
+			return nil, fmt.Errorf("custom pattern %q: %w", s.Name, err)
+		}
+
+		sev := SeverityWarning
+		if s.Severity == "critical" {
+			sev = SeverityCritical
+		}
+
+		category := s.Category
+		if category == "" {
+			category = "custom"
+		}
+
+		out = append(out, Pattern{
+			Name:        s.Name,
+			Regex:       re,
+			Severity:    sev,
+			Description: s.Description,
+			Category:    category,
+		})
+	}
+	return out, nil
+}
+
+// MatchWith matches a command against both built-in patterns AND
+// the supplied custom patterns. Built-in matches appear first.
+func MatchWith(command string, custom []Pattern) []Pattern {
+	matches := Match(command)
+	for _, p := range custom {
 		if p.Regex.MatchString(command) {
 			matches = append(matches, p)
 		}

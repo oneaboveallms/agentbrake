@@ -1,7 +1,4 @@
 # AgentBrake — fish integration
-# Source this file in your ~/.config/fish/config.fish:
-#   agentbrake init fish | source
-# Or save it as a function.
 
 if not status is-interactive
     exit
@@ -14,18 +11,24 @@ end
 function __agentbrake_preexec --on-event fish_preexec
     set cmd $argv[1]
 
-    # Skip empty / agentbrake itself
+    # Empty
     if test -z "$cmd"
         return 0
     end
-    if string match -q "agentbrake*" -- "$cmd"
+
+    # Emergency bypass
+    if test "$AGENTBRAKE_DISABLE" = "1"
         return 0
     end
 
-    # Run the check
+    # Skip agentbrake binary by basename
+    set first_word (string split " " -- $cmd)[1]
+    set bname (string split "/" -- $first_word)[-1]
+    if test "$bname" = "agentbrake"
+        return 0
+    end
+
     if not agentbrake check "$cmd" </dev/tty
-        # Cancel the command — fish doesn't have a clean way to skip,
-        # so we abort with commandline -f
         commandline -f kill-whole-line
         commandline -f repaint
         return 1
