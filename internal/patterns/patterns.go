@@ -157,6 +157,286 @@ func All() []Pattern {
 			Description: "Deletes a Railway volume (caused PocketOS disaster)",
 			Category:    "cloud",
 		},
+		// ─────── DOCKER ───────
+		{
+			Name:        "DOCKER_SYSTEM_PRUNE_ALL",
+			Regex:       regexp.MustCompile(`\bdocker\s+system\s+prune\s+.*-a`),
+			Severity:    SeverityCritical,
+			Description: "Removes ALL unused containers, images, networks, volumes",
+			Category:    "docker",
+		},
+		{
+			Name:        "DOCKER_VOLUME_RM_ALL",
+			Regex:       regexp.MustCompile(`\bdocker\s+volume\s+rm\s+\$\(docker\s+volume\s+ls`),
+			Severity:    SeverityCritical,
+			Description: "Removes all Docker volumes (data loss)",
+			Category:    "docker",
+		},
+		{
+			Name:        "DOCKER_RMI_ALL",
+			Regex:       regexp.MustCompile(`\bdocker\s+rmi\s+\$\(docker\s+images`),
+			Severity:    SeverityWarning,
+			Description: "Removes all Docker images",
+			Category:    "docker",
+		},
+		{
+			Name:        "DOCKER_KILL_ALL",
+			Regex:       regexp.MustCompile(`\bdocker\s+kill\s+\$\(docker\s+ps`),
+			Severity:    SeverityWarning,
+			Description: "Kills all running Docker containers",
+			Category:    "docker",
+		},
+
+		// ─────── PACKAGE MANAGERS ───────
+		{
+			Name:        "NPM_PUBLISH_FORCE",
+			Regex:       regexp.MustCompile(`\bnpm\s+publish\s+.*--force`),
+			Severity:    SeverityCritical,
+			Description: "Force-publishes an npm package (irreversible version overwrite)",
+			Category:    "package",
+		},
+		{
+			Name:        "NPM_UNPUBLISH",
+			Regex:       regexp.MustCompile(`\bnpm\s+unpublish\b`),
+			Severity:    SeverityCritical,
+			Description: "Unpublishes an npm package — breaks dependents",
+			Category:    "package",
+		},
+		{
+			Name:        "PIP_UNINSTALL_ALL",
+			Regex:       regexp.MustCompile(`\bpip\s+uninstall\s+.*-y\s+.*\*`),
+			Severity:    SeverityWarning,
+			Description: "Uninstalls multiple Python packages without confirmation",
+			Category:    "package",
+		},
+		{
+			Name:        "CARGO_YANK",
+			Regex:       regexp.MustCompile(`\bcargo\s+yank\b`),
+			Severity:    SeverityWarning,
+			Description: "Yanks a published Cargo crate version",
+			Category:    "package",
+		},
+
+		// ─────── DATABASES ───────
+		{
+			Name:        "MONGO_DROP_DATABASE",
+			Regex:       regexp.MustCompile(`(?i)db\.dropDatabase\(\)`),
+			Severity:    SeverityCritical,
+			Description: "Drops the current MongoDB database",
+			Category:    "database",
+		},
+		{
+			Name:        "MONGO_DROP_COLLECTION",
+			Regex:       regexp.MustCompile(`(?i)db\.\w+\.drop\(\)`),
+			Severity:    SeverityCritical,
+			Description: "Drops a MongoDB collection and all its documents",
+			Category:    "database",
+		},
+		{
+			Name:        "MONGO_REMOVE_ALL",
+			Regex:       regexp.MustCompile(`(?i)db\.\w+\.remove\(\s*\{\s*\}\s*\)`),
+			Severity:    SeverityCritical,
+			Description: "Removes all documents from a MongoDB collection",
+			Category:    "database",
+		},
+		{
+			Name:        "REDIS_FLUSHALL",
+			Regex:       regexp.MustCompile(`(?i)\bFLUSHALL\b`),
+			Severity:    SeverityCritical,
+			Description: "Deletes all data in all Redis databases",
+			Category:    "database",
+		},
+		{
+			Name:        "REDIS_FLUSHDB",
+			Regex:       regexp.MustCompile(`(?i)\bFLUSHDB\b`),
+			Severity:    SeverityCritical,
+			Description: "Deletes all keys in the current Redis database",
+			Category:    "database",
+		},
+		{
+			Name:        "ELASTICSEARCH_DELETE_INDEX",
+			Regex:       regexp.MustCompile(`\bDELETE\s+/\w+/?$`),
+			Severity:    SeverityCritical,
+			Description: "Deletes an Elasticsearch index",
+			Category:    "database",
+		},
+
+		// ─────── CLOUD: AWS (more) ───────
+		{
+			Name:        "AWS_DYNAMODB_DELETE_TABLE",
+			Regex:       regexp.MustCompile(`\baws\s+dynamodb\s+delete-table\b`),
+			Severity:    SeverityCritical,
+			Description: "Deletes a DynamoDB table and all its data",
+			Category:    "cloud",
+		},
+		{
+			Name:        "AWS_EC2_TERMINATE",
+			Regex:       regexp.MustCompile(`\baws\s+ec2\s+terminate-instances\b`),
+			Severity:    SeverityWarning,
+			Description: "Terminates EC2 instances (cannot be undone)",
+			Category:    "cloud",
+		},
+		{
+			Name:        "AWS_IAM_DELETE_USER",
+			Regex:       regexp.MustCompile(`\baws\s+iam\s+delete-user\b`),
+			Severity:    SeverityCritical,
+			Description: "Deletes an IAM user account",
+			Category:    "cloud",
+		},
+		{
+			Name:        "AWS_CLOUDFORMATION_DELETE",
+			Regex:       regexp.MustCompile(`\baws\s+cloudformation\s+delete-stack\b`),
+			Severity:    SeverityCritical,
+			Description: "Deletes a CloudFormation stack and all its resources",
+			Category:    "cloud",
+		},
+
+		// ─────── CLOUD: GCP ───────
+		{
+			Name:        "GCP_PROJECT_DELETE",
+			Regex:       regexp.MustCompile(`\bgcloud\s+projects\s+delete\b`),
+			Severity:    SeverityCritical,
+			Description: "Schedules a GCP project for deletion",
+			Category:    "cloud",
+		},
+		{
+			Name:        "GCP_COMPUTE_DELETE",
+			Regex:       regexp.MustCompile(`\bgcloud\s+compute\s+instances\s+delete\b`),
+			Severity:    SeverityWarning,
+			Description: "Deletes a GCE virtual machine instance",
+			Category:    "cloud",
+		},
+		{
+			Name:        "GCP_SQL_DELETE",
+			Regex:       regexp.MustCompile(`\bgcloud\s+sql\s+instances\s+delete\b`),
+			Severity:    SeverityCritical,
+			Description: "Deletes a Cloud SQL database instance",
+			Category:    "cloud",
+		},
+		{
+			Name:        "GCP_STORAGE_RB",
+			Regex:       regexp.MustCompile(`\bgsutil\s+rb\b.*-r`),
+			Severity:    SeverityCritical,
+			Description: "Recursively removes a GCS bucket and contents",
+			Category:    "cloud",
+		},
+
+		// ─────── CLOUD: AZURE ───────
+		{
+			Name:        "AZURE_GROUP_DELETE",
+			Regex:       regexp.MustCompile(`\baz\s+group\s+delete\b`),
+			Severity:    SeverityCritical,
+			Description: "Deletes an Azure resource group and all resources",
+			Category:    "cloud",
+		},
+		{
+			Name:        "AZURE_VM_DELETE",
+			Regex:       regexp.MustCompile(`\baz\s+vm\s+delete\b`),
+			Severity:    SeverityWarning,
+			Description: "Deletes an Azure VM",
+			Category:    "cloud",
+		},
+
+		// ─────── KUBERNETES (more) ───────
+		{
+			Name:        "KUBECTL_DELETE_ALL",
+			Regex:       regexp.MustCompile(`\bkubectl\s+delete\s+all\s+--all\b`),
+			Severity:    SeverityCritical,
+			Description: "Deletes all resources in the current namespace",
+			Category:    "kubernetes",
+		},
+		{
+			Name:        "KUBECTL_DELETE_DEPLOYMENT",
+			Regex:       regexp.MustCompile(`\bkubectl\s+delete\s+(deploy|deployment)\b`),
+			Severity:    SeverityWarning,
+			Description: "Deletes a Kubernetes deployment",
+			Category:    "kubernetes",
+		},
+		{
+			Name:        "HELM_UNINSTALL",
+			Regex:       regexp.MustCompile(`\bhelm\s+(uninstall|delete)\b`),
+			Severity:    SeverityWarning,
+			Description: "Uninstalls a Helm release",
+			Category:    "kubernetes",
+		},
+
+		// ─────── GIT (more) ───────
+		{
+			Name:        "GIT_CLEAN_FORCE",
+			Regex:       regexp.MustCompile(`\bgit\s+clean\s+-[fdx]+\b`),
+			Severity:    SeverityWarning,
+			Description: "Removes untracked files (including ignored if -x)",
+			Category:    "git",
+		},
+		{
+			Name:        "GIT_BRANCH_DELETE_FORCE",
+			Regex:       regexp.MustCompile(`\bgit\s+branch\s+-D\b`),
+			Severity:    SeverityWarning,
+			Description: "Force deletes a Git branch (even unmerged)",
+			Category:    "git",
+		},
+		{
+			Name:        "GIT_TAG_DELETE",
+			Regex:       regexp.MustCompile(`\bgit\s+push\s+(--delete|-d)\s+\w+\s+`),
+			Severity:    SeverityWarning,
+			Description: "Deletes a remote tag or branch",
+			Category:    "git",
+		},
+
+		// ─────── DANGEROUS SYSTEM ───────
+		{
+			Name:        "DD_TO_DEVICE",
+			Regex:       regexp.MustCompile(`\bdd\s+.*of=/dev/(sd|nvme|hd|disk)`),
+			Severity:    SeverityCritical,
+			Description: "Writes raw data to a disk device — wipes data",
+			Category:    "system",
+		},
+		{
+			Name:        "MKFS",
+			Regex:       regexp.MustCompile(`\bmkfs(\.\w+)?\s+/dev/`),
+			Severity:    SeverityCritical,
+			Description: "Formats a disk partition — destroys all data",
+			Category:    "system",
+		},
+		{
+			Name:        "SHRED",
+			Regex:       regexp.MustCompile(`\bshred\s+.*-u\b`),
+			Severity:    SeverityCritical,
+			Description: "Securely deletes files — unrecoverable",
+			Category:    "system",
+		},
+		{
+			Name:        "CHMOD_777_RECURSIVE",
+			Regex:       regexp.MustCompile(`\bchmod\s+-R\s+777\b`),
+			Severity:    SeverityWarning,
+			Description: "Makes all files world-writable recursively (security risk)",
+			Category:    "system",
+		},
+		{
+			Name:        "CHOWN_RECURSIVE_ROOT",
+			Regex:       regexp.MustCompile(`\bchown\s+-R\s+\w+\s+/(\s|$)`),
+			Severity:    SeverityCritical,
+			Description: "Recursively changes ownership starting at root",
+			Category:    "system",
+		},
+
+		// ─────── NETWORK / DNS ───────
+		{
+			Name:        "IPTABLES_FLUSH",
+			Regex:       regexp.MustCompile(`\biptables\s+-F\b`),
+			Severity:    SeverityWarning,
+			Description: "Flushes all iptables rules (firewall down)",
+			Category:    "network",
+		},
+
+		// ─────── PROCESS ───────
+		{
+			Name:        "KILL_ALL_PROCESSES",
+			Regex:       regexp.MustCompile(`\bkillall\s+-9\b`),
+			Severity:    SeverityWarning,
+			Description: "Forcefully kills all matching processes",
+			Category:    "system",
+		},
 	}
 }
 

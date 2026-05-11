@@ -1,0 +1,5 @@
+499f0ef893cd141b2105b71471bf47d5d4fe076af0424f566f0b75b843eddaeb  agentbrake_0.0.1-next_darwin_amd64.tar.gz
+967a6d003dbcf941bce810962d554282feaca632884614d9902f066d7047b2ff  agentbrake_0.0.1-next_darwin_arm64.tar.gz
+48f924fd7bd1c345802d5b55d9c5e2a18f7c900a54ea8b21f81b8d20565293aa  agentbrake_0.0.1-next_linux_amd64.tar.gz
+08dceac16e02a11bd7632fd0af6475d8d6d1fbdd28dcf07c85baef07d62658e3  agentbrake_0.0.1-next_linux_arm64.tar.gz
+894f0586f128ee225c78a7bf7125116138b516d30858849873bc488e59141679  agentbrake_0.0.1-next_windows_amd64.zip
