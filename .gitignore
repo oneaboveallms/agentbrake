@@ -33,3 +33,5 @@ go.work.sum
 
 # Local binary
 agentbrake
+# Build artifacts
+dist/
